@@ -29,3 +29,57 @@ ip-10-0-1-20.ca-central-1.compute.internal   NotReady   control-plane,master   4
 ip-10-0-1-30.ca-central-1.compute.internal   NotReady   worker                 49m   v1.22.4
 ip-10-0-1-31.ca-central-1.compute.internal   NotReady   worker                 49m   v1.22.4
 ```
+
+### a. Install the Calico Operator
+
+```bash
+kubectl apply -f https://projectcalico.docs.tigera.io/archive/v3.22/manifests/tigera-operator.yaml
+```
+
+### b. Verify if the Calico Operator has successfully deployed:
+
+```bash
+kubectl rollout status -n tigera-operator deployment tigera-operator
+deployment "tigera-operator" successfully rolled out
+```
+
+### c. Download the custom resource manifest.
+
+```bash
+curl https://projectcalico.docs.tigera.io/archive/v3.22/manifests/custom-resources.yaml -O
+```
+
+### d. Change the POD CIDR from 192.168.0.0/16 to 10.48.0.0/16 and disable the encapsulation as per the commands below:
+
+```bash
+sed -i 's,192\.168\.0\.0\/16,10\.48\.0\.0\/16,g' custom-resources.yaml
+sed -i 's,VXLANCrossSubnet,None,g' custom-resources.yaml
+```
+
+### e. Apply the custom-resource:
+
+```bash
+$ kubectl apply -f custom-resources.yaml
+```
+
+### f. Check if the node status is Ready:
+
+```bash
+kubectl get nodes
+NAME                                         STATUS   ROLES                  AGE   VERSION
+ip-10-0-1-20.ca-central-1.compute.internal   Ready    control-plane,master   61m   v1.22.4
+ip-10-0-1-30.ca-central-1.compute.internal   Ready    worker                 60m   v1.22.4
+ip-10-0-1-31.ca-central-1.compute.internal   Ready    worker                 60m   v1.22.4
+```
+### g. Check if the apiserver and calico are available:
+
+```bash
+$ kubectl get tigerastatus
+NAME        AVAILABLE   PROGRESSING   DEGRADED   SINCE
+apiserver   True        False         False      52s
+calico      True        False         False      92s
+```
+
+## 3. Install Calico Cloud in the cluster
+
+### a. In Calico Cloud UI, click in the Managed Cluster icon , in the bottom “Connect Cluster”, insert the desired name for the cluster (put the cluster name), select the “Kubeadm” and click “Next”
