@@ -82,5 +82,5 @@ calico      True        False         False      92s
 
 ## 3. Install Calico Cloud in the cluster
 
-### a. In Calico Cloud UI, click in the Managed Cluster icon <img src="Images/icon-1.png" alt="Connect Cluster" width="40">, in the bottom “Connect Cluster”, insert the desired name for the cluster (put the cluster name), select the “Kubeadm” and click “Next”
+### a. In Calico Cloud UI, click in the Managed Cluster icon <img src="Images/icon-1.png" alt="Connect Cluster" width="20">, in the bottom “Connect Cluster”, insert the desired name for the cluster (put the cluster name), select the “Kubeadm” and click “Next”
 
