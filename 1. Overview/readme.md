@@ -63,7 +63,7 @@ sed -i 's,VXLANCrossSubnet,None,g' custom-resources.yaml
 ### e. Apply the custom-resource:
 
 ```bash
-$ kubectl apply -f custom-resources.yaml
+kubectl apply -f custom-resources.yaml
 ```
 
 ### f. Check if the node status is Ready:
@@ -80,7 +80,7 @@ ip-10-0-1-31.ca-central-1.compute.internal   Ready    worker                 60m
 ### g. Check if the apiserver and calico are available:
 
 ```bash
-$ kubectl get tigerastatus
+kubectl get tigerastatus
 ```
 ```bash
 NAME        AVAILABLE   PROGRESSING   DEGRADED   SINCE
@@ -191,13 +191,13 @@ echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://"
 ### a. To enable automatically the Host EndPoints (HEP) in the kubernetes (k8s) nodes, run the following command:
 
 ```bash
-$ kubectl patch kubecontrollersconfiguration default --patch='{"spec": {"controllers": {"node": {"hostEndpoint": {"autoCreate": "Enabled"}}}}}'
+kubectl patch kubecontrollersconfiguration default --patch='{"spec": {"controllers": {"node": {"hostEndpoint": {"autoCreate": "Enabled"}}}}}'
 ```
 
 ### b. Wait some seconds and check if the HEPs have been created:
 
 ```bash
-$ kubectl get hep
+kubectl get hep
 ```
 
 ### c. To enable the HEP on the non k8s node (bastion), follow the steps below:
@@ -354,8 +354,9 @@ kubectl get hep external-bastion
 ```bash
 NAME               CREATED AT
 external-bastion   2022-07-07T13:28:17Z
-
-$ kubectl describe hep external-bastion
+```
+```bash
+kubectl describe hep external-bastion
 Name:         external-bastion
 Namespace:    
 Labels:       bastion=true
