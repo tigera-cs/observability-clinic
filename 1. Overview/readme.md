@@ -24,8 +24,8 @@ The nodes are in Not Ready status so it means there is no CNI configured.
 
 ```bash
 kubectl get nodes
-```bash
 ```
+```bash
 NAME                                         STATUS     ROLES                  AGE   VERSION
 ip-10-0-1-20.ca-central-1.compute.internal   NotReady   control-plane,master   49m   v1.22.4
 ip-10-0-1-30.ca-central-1.compute.internal   NotReady   worker                 49m   v1.22.4
