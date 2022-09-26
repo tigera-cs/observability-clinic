@@ -269,7 +269,7 @@ EOF'
 The FAILSAFE INBOUND and OUTBOUND ports are defined to ensure that the essential traffic (SSH, DNS, DHCP, BGP and kube-apiserver) will not be accidentally blocked hence those ports will continue to be allowed even if there is a Security Policy denying it.
 
 
-<span style="color:red">some **WE DO NOT RECOMMEND TO CHANGE THE DEFAULT SETTINGS!** text</span>
+<span style="color:red">**WE DO NOT RECOMMEND TO CHANGE THE DEFAULT SETTINGS!**</span>
 
 Create the calico.service to start the cnx-node binary:
 
@@ -438,7 +438,7 @@ The purpose of the tiers is a hierarchical construct used to group policies and 
 The UI should show the tiers created like the picture below:
 
 <p align="center">
-  <img src="Images/4.m1-lab6-1.png" alt="Connect Cluster" align="center" width="900">
+  <img src="Images/4.m1-lab6-1.png" alt="Connect Cluster" align="center" width="1100">
 </p>
 
 
