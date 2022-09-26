@@ -96,7 +96,7 @@ calico      True        False         False      92s
 ### b. In the next screen, click “Next” then copy and paste the command into the lab
 
 <p align="center">
-  <img src="Images/2.m1lab3-1.png" alt="Connect Cluster" align="center" width="500">
+  <img src="Images/2.m1lab3-1.png" alt="Connect Cluster" align="center" width="600">
 </p>
 
 ### c. Wait for all services become available:
@@ -122,7 +122,7 @@ monitor                         True        False         False      100s
 ### a. The application diagram is shown below: 
 
 <p align="center">
-  <img src="Images/3.m1lab4-1.png" alt="Connect Cluster" align="center" width="800">
+  <img src="Images/3.m1lab4-1.png" alt="Connect Cluster" align="center" width="1000">
 </p>
 
 | Deployment Name         | Label                     | Service Port/Proto  |
