@@ -96,7 +96,7 @@ calico      True        False         False      92s
 ### b. In the next screen, click “Next” then copy and paste the command into the lab
 
 <p align="center">
-  <img src="Images/2.m1lab3-1.png" alt="Connect Cluster" align="center" width="500">
+  <img src="Images/2.m1lab3-1.png" alt="Connect Cluster" align="center" width="800">
 </p>
 
 ### c. Wait for all services become available:
