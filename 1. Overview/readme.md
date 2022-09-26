@@ -92,3 +92,39 @@ calico      True        False         False      92s
 
 ### a. In Calico Cloud UI, click in the Managed Cluster icon <img src="Images/icon-1.png" alt="Connect Cluster" width="30">, in the bottom “Connect Cluster”, insert the desired name for the cluster (put the cluster name), select the “Kubeadm” and click “Next”
 
+
+### b. In the next screen, click “Next” then copy and paste the command into the lab
+
+<p align="center">
+  <img src="Images/2.m1lab3-1.png" alt="Connect Cluster" align="center" width="500">
+</p>
+
+### c. Wait for all services become available:
+
+```bash
+watch kubectl get tigerastatus
+```
+```bash
+NAME                            AVAILABLE   PROGRESSING   DEGRADED   SINCE
+apiserver                       True        False         False      2m55s
+calico                          True        False         False      40s
+compliance                      True        False         False      25s
+intrusion-detection             True        False         False      40s
+log-collector                   True        False         False      10s
+management-cluster-connection   True        False         False      80s
+monitor                         True        False         False      100s
+```
+
+### d. Check in the Managed Cluster icon <img src="Images/icon-1.png" alt="Connect Cluster" width="30"> if the cluster is showing as “Connected”
+
+## 4. Install hipstershop application
+
+### a. The application diagram is shown below: 
+
+<p align="center">
+  <img src="Images/3.m1lab4-1.png" alt="Connect Cluster" align="center" width="500">
+</p>
+
+| Deployment Name | Label           | Service Port/Proto    |
+| :-----------:   | :-------------: | :-------------------: |
+| adservice       | app=adservice   | 9555/TCP              |
