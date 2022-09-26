@@ -268,7 +268,8 @@ EOF'
 
 The FAILSAFE INBOUND and OUTBOUND ports are defined to ensure that the essential traffic (SSH, DNS, DHCP, BGP and kube-apiserver) will not be accidentally blocked hence those ports will continue to be allowed even if there is a Security Policy denying it.
 
-WE DO NOT RECOMMEND TO CHANGE THE DEFAULT SETTINGS!
+
+<span style="color:red">some **WE DO NOT RECOMMEND TO CHANGE THE DEFAULT SETTINGS!** text</span>
 
 Create the calico.service to start the cnx-node binary:
 
@@ -304,9 +305,12 @@ Created symlink /etc/systemd/system/multi-user.target.wants/calico.service → /
 ```bash
 sudo systemctl start calico
 ```
-```bash
+
 Check if the calico.service is active and running:
-$ sudo systemctl status calico
+```bash
+sudo systemctl status calico
+```
+```bash
 ● calico.service - Calico Felix agent
      Loaded: loaded (/etc/systemd/system/calico.service; enabled; vendor preset: enabled)
      Active: active (running) since Thu 2022-07-07 sed -i 's/FELIX_FAILSAFEOUTBOUNDHOSTPORTS=\"tcp:0.0.0.0\/0:22,/FELIX_FAILSAFEOUTBOUNDHOSTPORTS=/g' calico.env 13:22:18 UTC; 6s ago
@@ -428,9 +432,9 @@ security          2022-07-07T13:45:38Z
 tigera-security   2022-07-04T11:05:24Z
 ```
 
-		The purpose of the tiers is a hierarchical construct used to group policies and enforce higher precedence policies that cannot be circumvented by other teams. 
+The purpose of the tiers is a hierarchical construct used to group policies and enforce higher precedence policies that cannot be circumvented by other teams. 
 ￼
-		The UI should show the tiers created like the picture below:
+The UI should show the tiers created like the picture below:
 
 <p align="center">
   <img src="Images/4.m1-lab6-1.png" alt="Connect Cluster" align="center" width="500">
@@ -457,12 +461,12 @@ Allow Ingress and Egress traffic to kube-dns:
 kubectl apply -f /home/tigera/tsworkshop/workshop1/manifests/5-netpol-ingress-allow-pods-to-kubedns.yaml
 ```
 
- 		Apply policies for the k8s nodes and pods:
+Apply policies for the k8s nodes and pods:
 ```bash
 kubectl apply -f /home/tigera/tsworkshop/workshop1/manifests/6-gnetpol-egress-allow-from-and-to-host.yaml 
 ```
 
-        For the k8s HEPs (Global Network Policy):
+For the k8s HEPs (Global Network Policy):
 * Ingress:
     * TCP 443 (HTTPS);
     * UDP 68 (DHCP);
@@ -499,7 +503,7 @@ kubectl apply -f /home/tigera/tsworkshop/workshop1/manifests/8-netpol-app-hipste
 ### f. Try to connect to www.google.com through TCP 443 (HTTPS) and it will timeout as there is no Security Policy allowing it:
 
 ```bash
-$ curl -k https://www.google.com --connect-timeout 5 -I
+curl -k https://www.google.com --connect-timeout 5 -I
 ```
 ```bash
 curl: (28) Connection timed out after 5000 milliseconds
@@ -530,7 +534,7 @@ For non-k8s HEP - bastion node (Global Network Policy):
 
 ### h. The connection with google and tigera should still timeout because the external host is configured with a DNS server not trusted by felixconfiguration, therefore, we need to add the trust DNS on felixconfiguration:
 
-		Check the DNS configured in the bastion host:
+Check the DNS configured in the bastion host:
 
 ```bash
 resolvectl status | grep 'DNS Servers:'
@@ -539,7 +543,7 @@ resolvectl status | grep 'DNS Servers:'
          DNS Servers: 10.0.0.2   
 ```
 
-		Check the kube-dns service running on the cluster:
+Check the kube-dns service running on the cluster:
 ```bash
 kubectl get svc -n kube-system
 ```
@@ -548,7 +552,7 @@ NAME       TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)                  AGE
 kube-dns   ClusterIP   10.49.0.10   <none>        53/UDP,53/TCP,9153/TCP   7d23h
 ```
 
-		Edit the felixconfiguration and add the dnsTrustedServers (DNS configured in the bastion and the kube-dns service) in the spec section as below:
+Edit the felixconfiguration and add the dnsTrustedServers (DNS configured in the bastion and the kube-dns service) in the spec section as below:
 
 ```bash
 kubectl edit felixconfiguration
