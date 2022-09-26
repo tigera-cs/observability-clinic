@@ -125,6 +125,17 @@ monitor                         True        False         False      100s
   <img src="Images/3.m1lab4-1.png" alt="Connect Cluster" align="center" width="500">
 </p>
 
-| Deployment Name | Label           | Service Port/Proto    |
-| :-----------:   | :-------------: | :-------------------: |
-| adservice       | app=adservice   | 9555/TCP              |
+| Deployment Name         | Label                     | Service Port/Proto  |
+| :-----------:           | :-------------:           | :-----------------: |
+| adservice               | app=adservice             | 9555/TCP            |
+| cartservice             | app=cartservice           | 7070/TCP            |
+| checkoutservice         | app=checkoutservice       | 5050/TCP            |
+|currencyservice          | app=currencyservice       | 7000/TCP            |
+| emailservice            | app=emailservice          | 5000/TCP            |
+| frontend                | app=frontend              | 80/TCP              |
+| loadgenerator           | app=loadgenerator         |                     |
+| paymentservice          | app=paymentservice        | 50051/TCP           |
+| productcatalogservice   | app=productcatalogservice | 3550/TCP            |
+| recommendationservice   | app=recommendationservice | 8080/TCP            |
+| redis-cart              |app=redis-cart             | 6379/TCP            |
+| shippingservice         | app=shippingservice       | 50051/TCP           |
