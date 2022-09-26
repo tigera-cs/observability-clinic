@@ -11,12 +11,12 @@
 
 Hosts/nodes:
 
-• 10.0.0.2/32: DNS Server for the subnet 10.0.1.0/24
-• 10.0.1.1/32: Default gateway for the subnet 10.0.1.0/24
-• 10.0.1.10/32: Bastion Host - Linux server that plays the roles of BGP ToR and Jump server
-• 10.0.1.20/32: Kubernetes Master node (Control1) 
-• 10.0.1.30/32: Kubernetes Worker node (Worker1)
-• 10.0.1.31/32: Kubernetes Worker node (Worker2)
+#^ 10.0.0.2/32: DNS Server for the subnet 10.0.1.0/24
+#^ 10.0.1.1/32: Default gateway for the subnet 10.0.1.0/24
+#^ 10.0.1.10/32: Bastion Host - Linux server that plays the roles of BGP ToR and Jump server
+#^ 10.0.1.20/32: Kubernetes Master node (Control1) 
+#^ 10.0.1.30/32: Kubernetes Worker node (Worker1)
+#^ 10.0.1.31/32: Kubernetes Worker node (Worker2)
 
 ## 2. Install Calico as CNI
 
