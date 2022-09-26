@@ -7,7 +7,7 @@ Supporting documentation for Observability Clinic Workshop. The intent of this w
 
 ## Objectives
 
-During this workshop, we will be focusing on investigating and troubleshooting flows and undesired configurations in the Security Policies. There are hand-on labs to test the knowledge gained during this workshop.
+During this workshop, we will be focusing on investigating and troubleshooting flows and undesired configurations in the Security Policies. There are hands-on labs to test the knowledge gained during this workshop.
 
 - [Module 1. Overview of the Calico Cloud Security Policy capabilities](1.%20Overview/readme.md)
 - [Module 2. Investigate denied flows using the Calico Cloud UI](2.%20UI/readme.md)
