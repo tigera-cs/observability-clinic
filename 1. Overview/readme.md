@@ -40,6 +40,8 @@ kubectl apply -f https://projectcalico.docs.tigera.io/archive/v3.22/manifests/ti
 
 ```bash
 kubectl rollout status -n tigera-operator deployment tigera-operator
+```bash
+```
 deployment "tigera-operator" successfully rolled out
 ```
 
@@ -66,6 +68,8 @@ $ kubectl apply -f custom-resources.yaml
 
 ```bash
 kubectl get nodes
+```
+```bash
 NAME                                         STATUS   ROLES                  AGE   VERSION
 ip-10-0-1-20.ca-central-1.compute.internal   Ready    control-plane,master   61m   v1.22.4
 ip-10-0-1-30.ca-central-1.compute.internal   Ready    worker                 60m   v1.22.4
@@ -75,6 +79,8 @@ ip-10-0-1-31.ca-central-1.compute.internal   Ready    worker                 60m
 
 ```bash
 $ kubectl get tigerastatus
+```
+```bash
 NAME        AVAILABLE   PROGRESSING   DEGRADED   SINCE
 apiserver   True        False         False      52s
 calico      True        False         False      92s
