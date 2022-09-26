@@ -438,7 +438,7 @@ The purpose of the tiers is a hierarchical construct used to group policies and 
 The UI should show the tiers created like the picture below:
 
 <p align="center">
-  <img src="Images/4.m1-lab6-1.png" alt="Connect Cluster" align="center" width="500">
+  <img src="Images/4.m1-lab6-1.png" alt="Connect Cluster" align="center" width="700">
 </p>
 
 
