@@ -6,7 +6,7 @@
 
 
 <p align="center">
-  <img src="Images/1.m1lab1-1.jpg" alt="Network Diagram" align="center" width="400">
+  <img src="Images/1.m1lab1-1.jpg" alt="Network Diagram" align="center" width="500">
 </p>
 
 Hosts/nodes:
