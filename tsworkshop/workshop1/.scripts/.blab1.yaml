@@ -1,0 +1,19 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: app-hipstershop.paymentservice
+  namespace: hipstershop
+spec:
+  tier: app-hipstershop
+  order: 1600
+  selector: app == "paymentserviceee"
+  ingress:
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: app == "checkoutservice"
+      destination:
+        ports:
+          - "50051"
+  types:
+    - Ingress

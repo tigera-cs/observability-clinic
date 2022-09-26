@@ -1,0 +1,10 @@
+ apiVersion: projectcalico.org/v3
+ kind: GlobalNetworkPolicy
+ metadata:
+   name: fortinet.production-microservice1
+ spec:
+   selector: "env == 'prod' && role == 'microservice1'"
+   types:
+   - Egress
+   egress:
+   - action: Allow

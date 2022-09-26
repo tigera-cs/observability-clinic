@@ -1,0 +1,6 @@
+apiVersion: projectcalico.org/v3
+kind: Tier
+metadata:
+  name: fortinet
+spec:
+  order: 350

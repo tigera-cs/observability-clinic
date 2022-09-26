@@ -1,0 +1,19 @@
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: app-hipstershop.shippingservice
+  namespace: hipstershop
+spec:
+  tier: app-hipstershop
+  order: 1700
+  selector: app == "shippingservice"
+  ingress:
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: app == "checkoutservice"||app == "frontend"
+      destination:
+        ports:
+          - "50051"
+  types:
+    - Ingress
