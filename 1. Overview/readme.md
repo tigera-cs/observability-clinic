@@ -235,8 +235,7 @@ ssh control1
 sudo docker cp $(sudo docker ps | grep -i calico-node_calico-node | awk '{print $1}'):/bin/calico-node cnx-node
 ```
 
-The cnx-node binary will be copied for the non-k8s node to run the felix on that to enforce the Security Policies/iptables rules as per documentation below:
-https://docs.tigera.io/reference/architecture/overview
+The cnx-node binary will be copied for the non-k8s node to run the felix on that to enforce the Security Policies/iptables rules as per the **[documentation](https://docs.tigera.io/reference/architecture/overview)**.
 
 ### g. Exit from the control1 node and copy the cnx-node from control1 to bastion and change the user/group and permissions to the binary as below:
 

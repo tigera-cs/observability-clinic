@@ -1,14 +1,14 @@
 # Module 2 - Investigate denied flows using the Calico Cloud UI
 
 
-## Identify denied flows using the Dynamic Service and Threat Graph
+## 1. Identify denied flows using the Dynamic Service and Threat Graph
 
 ### Demo
 
 #### a. Opening the lab and run the script below:
 
 ```bash
-$ /home/tigera/tsworkshop/workshop1/lab-script.sh
+/home/tigera/tsworkshop/workshop1/lab-script.sh
 ```
 
 #### b. Typing the option “1” (Demo Break Online Boutique - Dynamic Service and Threat Graph) and press “Enter”
@@ -17,7 +17,7 @@ $ /home/tigera/tsworkshop/workshop1/lab-script.sh
 
 #### d. Open the Online Boutique with the URL shown through the command below and select any product:
 ```bash
-$ echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).lynx.tigera.ca
+echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).lynx.tigera.ca
 ```
 
 <p align="center">
@@ -38,7 +38,7 @@ $ echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F ":/
 
 #### g. The request didn’t complete and return HTTP 500 Internal error:
 
-```bash
+```nano
 HTTP Status: 500 Internal Server Error
 
 rpc error: code = Internal desc = failed to charge card: could not charge the card: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing dial tcp 10.49.11.61:50051: i/o timeout"
@@ -175,142 +175,178 @@ failed to complete the order
 
 #### i. Investigate through the Dynamic Service and Threat Graph which flows have been denied and the Security Policy related to it, and how to fix this issue. Use the hipstershop application information provided in the **[Module 1 - Topic 4](https://github.com/tigera-cs/observability-clinic/blob/main/1.%20Overview/readme.md#4-install-hipstershop-application)**. 
 
-To revert back the misconfiguration applied, run the script and type “21” (LAB Fix Online Boutique - Dynamic Service and Threat Graph) and press Enter. To exit type "99" and press “Enter”.
+#### j. To revert back the misconfiguration applied, run the script and type “21” (LAB Fix Online Boutique - Dynamic Service and Threat Graph) and press Enter. To exit type "99" and press “Enter”.
 
-Identify denied flows using the Flow Visualizations
+## 2. Identify denied flows using the Flow Visualizations
 
-Demo
+### Demo
 
-Opening the lab and run the script below:
+#### a. Opening the lab and run the script below:
 
-$ /home/tigera/tsworkshop/workshop1/lab-script.sh
+```bash
+/home/tigera/tsworkshop/workshop1/lab-script.sh
+```
+
+#### b. Typing the option “3” (Demo Break Online Boutique - Flow Visualizations) and press “Enter”
+
+#### c. Type "99" and “Enter” to exit
+
+#### d. Opening the Online Boutique with the URL shown through the command below and Trying to access the Online Boutique we get the error: *“504 Gateway Time-out”*
+
+```bash
+echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).lynx.tigera.ca
+```
+
+#### e. On Tigera-UI > <img src="Images/icon-3.png" alt="FlowViz" width="30"> > Flow Visualizations, we can select the Denied flows in the Status field:
+
+<p align="center">
+  <img src="Images/20.m2lab3-1.png" alt="FlowViz" align="center" width="800">
+</p>
+
+#### f. When selecting the Denied flow in the Flow Visualizations, the details about this flow shows in the right side of the screen. If we click on the “All Flows” dropdown, we can see the Denied flow from pvt (private network) to frontend illustrated with a red arrow.  Select this flow to see more information about it. Now we can see that the Security Policy that is denying this flow is hipstershop.app-hipstership.fronted
+
+<p align="center">
+  <img src="Images/21.m2lab3-2.png" alt="FlowViz - Denied flows" align="center" width="800">
+</p>
+
+#### g. When clicking on the Security Policy, it will redirect to the Security Policy (hipstershop.app-hipstership.fronted) configuration and when looking into the ingress rules, it is configured to Log the flow and not Allow it.
+
+<p align="center">
+  <img src="Images/22.m2lab3-3.png" alt="Security Policy" align="center" width="800">
+</p>
+
+#### h. After editing the Security Policy and changing the ingress rule to Allow instead of Log, the Online Boutique is accessible again.
+
+### LAB
+
+#### a. Open the lab and run the script below:
+
+```bash
+/home/tigera/tsworkshop/workshop1/lab-script.sh
+```
+
+#### b. Type the option “4” (LAB Break Online Boutique - Flow Visualizations) and press “Enter”
+
+#### c. Type "99" and “Enter” to exit
+
+#### d. Open the browser with the URL shown through the command below:
+
+```bash
+echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).lynx.tigera.ca
+```
+
+#### e. Select any product(s), add to the Cart and click on “Place Order”.
 
 
-Typing the option “3” (Demo Break Online Boutique - Flow Visualizations) and press “Enter”
-Type "99" and “Enter” to exit
+#### f. An internal server error will return saying *“failed to get product #"OLJCESPC7Z"“*:
 
-Opening the Online Boutique with the URL shown through the command below and Trying to access the Online Boutique we get the error: “504 Gateway Time-out”
-$ echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).lynx.tigera.ca
-
-
-
-
-On Tigera-UI >  > Flow Visualizations, we can select the Denied flows in the Status field:
-
-
-When selecting the Denied flow in the Flow Visualizations, the details about this flow shows in the right side of the screen.
-If we click on the “All Flows” dropdown, we can see the Denied flow from pvt (private network) to frontend illustrated with a red arrow.  Select this flow to see more information about it. Now we can see that the Security Policy that is denying this flow is hipstershop.app-hipstership.fronted
-
-
-
-When clicking on the Security Policy, it will redirect to the Security Policy (hipstershop.app-hipstership.fronted) configuration and when looking into the ingress rules, it is configured to Log the flow and not Allow it.
-
-
-After editing the Security Policy and changing the ingress rule to Allow instead of Log, the Online Boutique is accessible again.
-
-LAB
-
-Open the lab and run the script below:
-
-$ /home/tigera/tsworkshop/workshop1/lab-script.sh
-
-
-Type the option “4” (LAB Break Online Boutique - Flow Visualizations) and press “Enter”
-Type "99" and “Enter” to exit
-
-Open the browser with the URL shown through the command below:
-$ echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).lynx.tigera.ca
-
-
-
-
-Select any product(s), add to the Cart and click on “Place Order”.
-
-
-An internal server error will return saying “failed to get product #"OLJCESPC7Z"“:
-
+```nano
 HTTP Status: 500 Internal Server Error
 rpc error: code = Internal desc = failed to prepare order: failed to get product #"OLJCESPC7Z"
 failed to complete the order
+```
 
+<p align="center">
+  <img src="Images/23.m2lab4-1.png" alt="Online Boutique - Error" align="center" width="800">
+</p>
 
-Investigate through the Flow Visualizations which flows have been denied and the Security Policy related to it, and how to fix this issue. Use the hipstershop application information provided in the Module 1 - Topic 4.
+#### g. Investigate through the Flow Visualizations which flows have been denied and the Security Policy related to it, and how to fix this issue. Use the hipstershop application information provided in the **[Module 1 - Topic 4](https://github.com/tigera-cs/observability-clinic/blob/main/1.%20Overview/readme.md#4-install-hipstershop-application)**.
 
-To revert back the misconfiguration applied, run the script and type “41” (LAB Fix Online Boutique - Flow Visualizations) and press Enter. To exit type "99" and press “Enter”.
+#### h. To revert back the misconfiguration applied, run the script and type “41” (LAB Fix Online Boutique - Flow Visualizations) and press Enter. To exit type "99" and press “Enter”.
 
-Identify denied flows using Kibana
+## 3. Identify denied flows using Kibana
 
-Demo
+### Demo
 
-Opening the lab and run the script below:
+#### a. Opening the lab and run the script below:
 
-$ /home/tigera/tsworkshop/workshop1/lab-script.sh
+```bash
+/home/tigera/tsworkshop/workshop1/lab-script.sh
+```
 
+#### b. Typing the option “5” (Demo Break Online Boutique - Kibana) and press “Enter”
 
-Typing the option “5” (Demo Break Online Boutique - Kibana) and press “Enter”
-Type "99" and press “Enter” to exit
+#### c. Type "99" and press “Enter” to exit
 
-Opening the Online Boutique with the URL shown through the command below and Trying to access the Online Boutique we get the error: “504 Gateway Time-out”
+#### d. Opening the Online Boutique with the URL shown through the command below and Trying to access the Online Boutique we get the error: “504 Gateway Time-out”
 
-$ echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).lynx.tigera.ca
+```bash
+echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).lynx.tigera.ca
+```
 
+#### e. Open the Calico Cloud UI and go to Kibana by clicking in the icon <img src="Images/icon-4.png" alt="Kibana" width="30">
 
-Open the Calico Cloud UI and go to Kibana by clicking in the icon 
+#### f. From Kibana, there are multiple ways to track the flow and we will use a predefined dashboard hence go to Home > Analytics > Dashboard
 
-From Kibana, there are multiple ways to track the flow and we will use a predefined dashboard hence go to Home > Analytics > Dashboard
+<p align="center">
+  <img src="Images/24.m2lab5-1.png" alt="Kibana - Dashboard" align="center" width="800">
+</p>
 
+#### g. Clicking on “Tigera Secure EE Flow Logs” dashboard
 
-Clicking on “Tigera Secure EE Flow Logs” dashboard
+<p align="center">
+  <img src="Images/25.m2lab5-2.png" alt="Kibana - Tigera EE Flow logs" align="center" width="800">
+</p>
 
+#### h. Add the filters *“action"* is *"deny"*, *"dest_namespace"* is *"hipstershop"*, *"_index"* is *"\*<name_of_cluster>\** (as per the screenshot below). Kibana will show the logs of all clusters connected then if you want to see logs from a specific cluster, it is needed to filter by _index field. 
 
- 
-Add the filters “action" is "deny", "dest_namespace" is "hipstershop", "_index" is "*<name_of_cluster>* (as per the screenshot below). Kibana will show the logs of all clusters connected then if you want to see logs from a specific cluster, it is needed to filter by _index field. 
+<p align="center">
+  <img src="Images/26.m2lab5-3.png" alt="Kibana - Flow Logs filter" align="center" width="800">
+</p>
 
+#### i. We can see the denied flows. 
 
+<p align="center">
+  <img src="Images/27.m2lab5-4.png" alt="Kibana - Denied Flows" align="center" width="800">
+</p>
 
-We can see the denied flows. 
+#### j. Expanding the flow logs to frontend service as it is not accessible, it shows the Security Policy *"0|security|security.tenant-histershop|deny|0"* has denied this flow.
 
+<p align="center">
+  <img src="Images/28.m2lab5-5.png" alt="Kibana - Denied Policy" align="center" width="800">
+</p>
 
+#### k. When checking on the Security Policy “tenant-hipstershop”, we can see the Ingress rule set to Deny and it should be Pass as configured in the topic **[Configure the Security and DNS Policies in the cluster](https://github.com/tigera-cs/observability-clinic/blob/main/1.%20Overview/readme.md#6-configure-the-security-and-dns-policies-in-the-cluster)**.
 
-Expanding the flow logs to frontend service as it is not accessible, it shows the Security Policy "0|security|security.tenant-histershop|deny|0" has denied this flow.
+<p align="center">
+  <img src="Images/29.m2lab5-6.png" alt="Security Policy - Denied Policy" align="center" width="800">
+</p>
 
+#### i. After changing the Ingress rule to Pass in the “tenant-hipstershop” Security Policy, the Online Boutique should be accessible again.
 
+### LAB
 
-When checking on the Security Policy “tenant-hipstershop”, we can see the Ingress rule set to Deny and it should be Pass as configured in the topic Configure the Security and DNS Policies in the cluster
+#### a. Open the lab and run the script below:
 
+```bash
+/home/tigera/tsworkshop/workshop1/lab-script.sh
+```
 
+#### b. Type the option “6” (LAB Break Online Boutique - Kibana) and press “Enter”
 
-After changing the Ingress rule to Pass in the “tenant-hipstershop” Security Policy, the Online Boutique should be accessible again.
+#### c. Type "99" and press “Enter” to exit the script
 
+#### d. Open the browser with the URL shown through the command below:
 
-LAB
+```bash
+echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).lynx.tigera.ca
+```
 
-Open the lab and run the script below:
+#### e. Select any product(s), add to the Cart and click on “Place Order”.
 
-$ /home/tigera/tsworkshop/workshop1/lab-script.sh
+#### f. An internal server error will return saying “failed to get user cart during checkout”
 
-
-Type the option “6” (LAB Break Online Boutique - Kibana) and press “Enter”
-
-Type "99" and press “Enter” to exit the script
-
-Open the browser with the URL shown through the command below:
-$ echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).lynx.tigera.ca
-
-
-Select any product(s), add to the Cart and click on “Place Order”.
-
-An internal server error will return saying “failed to get user cart during checkout”
-
-
+```nano
 HTTP Status: 500 Internal Server Error
 rpc error: code = Internal desc = cart failure: failed to get user cart during checkout: rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing dial tcp 10.49.114.104:7070: i/o timeout"
 failed to complete the order
 main.(*frontendServer).placeOrderHandler
+```
 
+<p align="center">
+  <img src="Images/30.m2lab6-1.png" alt="Online Boutique - 500 Internal Server Error" align="center" width="800">
+</p>
 
+#### g. Investigate through the Kibana which flows have been denied and the Security Policy related to it, and how to fix this issue. Use the hipstershop application information provided in the **[Module 1 - Topic 4](https://github.com/tigera-cs/observability-clinic/blob/main/1.%20Overview/readme.md#4-install-hipstershop-application)**.
 
-
-Investigate through the Kibana which flows have been denied and the Security Policy related to it, and how to fix this issue. Use the hipstershop application information provided in the Module 1 - Topic 4.
-
-To revert back the misconfiguration applied, run the script and type “61” (LAB Fix Online Boutique - Kibana) and press Enter. To exit type "99" and press “Enter”.
+#### h. To revert back the misconfiguration applied, run the script and type “61” (LAB Fix Online Boutique - Kibana) and press Enter. To exit type "99" and press “Enter”.
