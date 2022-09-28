@@ -357,6 +357,8 @@ external-bastion   2022-07-07T13:28:17Z
 ```
 ```bash
 kubectl describe hep external-bastion
+```
+```bash
 Name:         external-bastion
 Namespace:    
 Labels:       bastion=true
