@@ -261,7 +261,7 @@ sudo bash -c 'cat << EOF > /etc/calico/calico.env
 FELIX_DATASTORETYPE=kubernetes
 KUBECONFIG=/home/tigera/.kube/config
 CALICO_NETWORKING_BACKEND=none
-FELIX_FAILSAFEINBOUNDHOSTPORTS="tcp:0.0.0.0/0:22,udp:0.0.0.0/0:68,udp:0.0.0.0/0:53,tcp:0.0.0.0/0:179"
+FELIX_FAILSAFEINBOUNDHOSTPORTS="tcp:0.0.0.0/0:22,udp:0.0.0.0/0:68,udp:0.0.0.0/0:53,tcp:0.0.0.0/0:179,tcp:0.0.0.0/0:80"
 FELIX_FAILSAFEOUTBOUNDHOSTPORTS="tcp:0.0.0.0/0:22,udp:0.0.0.0/0:53,udp:0.0.0.0/0:67,tcp:0.0.0.0/0:179,tcp:0.0.0.0/0:6443"
 EOF'
 ```
@@ -491,7 +491,7 @@ For the k8s HEPs (Global Network Policy):
 
 Create the Network Policy to pass the traffic from tenant=hipstershop to the next tiers.
 ```bash
-kubectl apply -f /home/tigera/tsworkshop/workshop1/manifests/-gnetpol-pass-hipstershop.yaml
+kubectl apply -f /home/tigera/tsworkshop/workshop1/manifests/7-gnetpol-pass-hipstershop.yaml
 ```
 
 Apply the Security Policies for the Hipstershop Application:
