@@ -51,7 +51,7 @@ Chain cali-pi-_sQdl6e7ekf9DS2UYNem (1 references)
 #### f. The traffic marked with 0x10000 will be returned to the previous chains until reaching the chain cali-FORWARD and when we list the cali-FORWARD rules, the rule with the comment “Policy explicitly accepted packet” is accepting all packets marked with 0x10000 hence, this traffic is allowed.
 
 ```bash
-$ sudo iptables -nvL cali-FORWARD
+sudo iptables -nvL cali-FORWARD
 ```
 ```bash
 Chain cali-FORWARD (1 references)
@@ -103,7 +103,7 @@ sudo iptables -nvL cali-po-_sQdl6e7ekf9DS2UYNem | egrep 'multiport|RETURN'
 If we track down this rule, we can see that the traffic was marked as 0x40000 and the last rule is dropping this traffic.
 
 ```bash
-$ sudo iptables -nvL cali-pi-_sQdl6e7ekf9DS2UYNem
+sudo iptables -nvL cali-pi-_sQdl6e7ekf9DS2UYNem
 ```
 ```bash
 Chain cali-pi-_sQdl6e7ekf9DS2UYNem (1 references)
@@ -140,7 +140,7 @@ Following the same instructions provided in the Demo, track down the cartservice
 
 ### Demo
 
-#### a.In the lab, run a multitool pod in the default namespace:
+#### a. In the lab, run a multitool pod in the default namespace:
 
 ```bash
 kubectl run multitool --image=wbitt/network-multitool
@@ -155,7 +155,7 @@ kubectl exec -it multitool -- bash
 #### c. Run a curl into frontend HTTP service in the hipstershop namespace. The connection should be established as the frontend Ingress Rule (fronted Security Policy) accepts connection on port 8080 from any source:
 
 ```bash
-$ curl http://frontend.hipstershop.svc.cluster.local
+curl http://frontend.hipstershop.svc.cluster.local
 ```
 
 #### d. Run the loop below into the checkoutservice service port 5050 and it should time out after 5 seconds. It is expected as the Security Policy checkoutservice only allows ingress traffic coming from the frontend and the other ones should be denied. Leave the loop running and open a new terminal to use for the next steps:
@@ -183,7 +183,7 @@ ssh worker1
 #### g. Run the command below to grep for the denied flows from the multitool pod:
 
 ```bash
-$ grep multitool /var/log/calico/flowlogs/flows.log | grep -i deny
+grep multitool /var/log/calico/flowlogs/flows.log | grep -i deny
 ```
 ```bash
 {"start_time":1659621542,"end_time":1659621842,"source_ip":"10.48.116.157","source_name":"multitool","source_name_aggr":"multitool","source_namespace":"default","nat_outgoing_ports":null,"source_port":null,"source_type":"wep","source_labels":{"labels":["run=multitool"]},"dest_ip":"10.48.127.224","dest_name":"checkoutservice-598d5b586d-wsvmz","dest_name_aggr":"checkoutservice-598d5b586d-*","dest_namespace":"hipstershop","dest_port":5050,"dest_type":"wep","dest_labels":{"labels":["app=checkoutservice","pod-template-hash=598d5b586d","tenant=hipstershop"]},"dest_service_namespace":"-","dest_service_name":"-","dest_service_port":"-","dest_service_port_num":null,"proto":"tcp","action":"deny","reporter":"dst","policies":{"all_policies":["1|app-hipstershop|hipstershop/app-hipstershop.checkoutservice|deny|-1","0|security|security.tenant-histershop|pass|0"]},"bytes_in":300,"bytes_out":0,"num_flows":1,"num_flows_started":1,"num_flows_completed":1,"packets_in":5,"packets_out":0,"http_requests_allowed_in":0,"http_requests_denied_in":0,"process_name":"-","num_process_names":0,"process_id":"-","num_process_ids":0,"process_args":["-"],"num_process_args":0,"original_source_ips":null,"num_original_source_ips":0,"tcp_mean_send_congestion_window":0,"tcp_min_send_congestion_window":0,"tcp_mean_smooth_rtt":0,"tcp_max_smooth_rtt":0,"tcp_mean_min_rtt":0,"tcp_max_min_rtt":0,"tcp_mean_mss":0,"tcp_min_mss":0,"tcp_total_retransmissions":0,"tcp_lost_packets":0,"tcp_unrecovered_to":0}
@@ -361,7 +361,7 @@ failed to complete the order
 #### a. Login to bastion node and run the loop below:
 
 ```bash
-$ while true; do curl https://kubernetes.io --connect-timeout 5; sleep 10; done
+while true; do curl https://kubernetes.io --connect-timeout 5; sleep 10; done
 ```
 ```bash
 curl: (28) Connection timed out after 5001 milliseconds
