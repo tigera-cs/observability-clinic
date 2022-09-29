@@ -312,7 +312,7 @@ echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://"
   <img src="Images/29.m2lab5-6.png" alt="Security Policy - Denied Policy" align="center" width="800">
 </p>
 
-#### i. After changing the Ingress rule to Pass in the “tenant-hipstershop” Security Policy, the Online Boutique should be accessible again.
+#### i. After changing the Ingress rule to ***Pass*** in the “tenant-hipstershop” Security Policy, the Online Boutique should be accessible again.
 
 ### LAB
 
