@@ -270,7 +270,7 @@ EOF'
 The FAILSAFE INBOUND and OUTBOUND ports are defined to ensure that the essential traffic (SSH, DNS, DHCP, BGP and kube-apiserver) will not be accidentally blocked hence those ports will continue to be allowed even if there is a Security Policy denying it.
 
 
-<font color="red">**WE DO NOT RECOMMEND TO CHANGE THE DEFAULT SETTINGS!**</font>
+<font color="red">WE DO NOT RECOMMEND TO CHANGE THE DEFAULT SETTINGS!</font>
 
 Create the calico.service to start the cnx-node binary:
 
