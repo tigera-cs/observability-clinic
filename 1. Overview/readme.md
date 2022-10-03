@@ -271,6 +271,9 @@ The FAILSAFE INBOUND and OUTBOUND ports are defined to ensure that the essential
 
 
 <font color="red">WE DO NOT RECOMMEND TO CHANGE THE DEFAULT SETTINGS!</font>
+<p style="color:red">WE DO NOT RECOMMEND TO CHANGE THE DEFAULT SETTINGS!</p>
+
+
 
 Create the calico.service to start the cnx-node binary:
 
