@@ -232,6 +232,8 @@ The ipset must be installed to set up IP Sets in the linux kernel and it will be
 
 ```bash
 ssh control1
+```
+```bash
 sudo docker cp $(sudo docker ps | grep -i calico-node_calico-node | awk '{print $1}'):/bin/calico-node cnx-node
 ```
 
@@ -268,7 +270,7 @@ EOF'
 The FAILSAFE INBOUND and OUTBOUND ports are defined to ensure that the essential traffic (SSH, DNS, DHCP, BGP and kube-apiserver) will not be accidentally blocked hence those ports will continue to be allowed even if there is a Security Policy denying it.
 
 
-<span style="color:red">**WE DO NOT RECOMMEND TO CHANGE THE DEFAULT SETTINGS!**</span>
+<font color="red">**WE DO NOT RECOMMEND TO CHANGE THE DEFAULT SETTINGS!**</font>
 
 Create the calico.service to start the cnx-node binary:
 
