@@ -440,7 +440,7 @@ tigera-security   2022-07-04T11:05:24Z
 
 The purpose of the tiers is a hierarchical construct used to group policies and enforce higher precedence policies that cannot be circumvented by other teams. 
 ￼
-> The UI should show the tiers created like the picture below:
+The UI should show the tiers created like the picture below:
 
 <p align="center">
   <img src="Images/4.m1-lab6-1.png" alt="Connect Cluster" align="center" width="1100">
@@ -489,7 +489,7 @@ For the k8s HEPs (Global Network Policy):
     * Any to trusted-repos
     * Any endpoint
 
-		For EndPoints:
+For EndPoints:
 * Egress:
     * Any to all EndPoints
 
