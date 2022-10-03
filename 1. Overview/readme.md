@@ -270,8 +270,7 @@ EOF'
 The FAILSAFE INBOUND and OUTBOUND ports are defined to ensure that the essential traffic (SSH, DNS, DHCP, BGP and kube-apiserver) will not be accidentally blocked hence those ports will continue to be allowed even if there is a Security Policy denying it.
 
 
-<font color="red">WE DO NOT RECOMMEND TO CHANGE THE DEFAULT SETTINGS!</font>
-<p style="color:red">WE DO NOT RECOMMEND TO CHANGE THE DEFAULT SETTINGS!</p>
+<font color="red">**WE DO NOT RECOMMEND TO CHANGE THE DEFAULT SETTINGS!**</font>
 
 
 
@@ -441,7 +440,7 @@ tigera-security   2022-07-04T11:05:24Z
 
 The purpose of the tiers is a hierarchical construct used to group policies and enforce higher precedence policies that cannot be circumvented by other teams. 
 ￼
-The UI should show the tiers created like the picture below:
+> The UI should show the tiers created like the picture below:
 
 <p align="center">
   <img src="Images/4.m1-lab6-1.png" alt="Connect Cluster" align="center" width="1100">
