@@ -50,7 +50,7 @@ failed to complete the order
 
 #### h. Why not take some time to try to solve this issue yourself before continuing further
 
-#### i. Go to the Dynamic Service and Threat Graph in the hipstershop namespace, where the Online Boutique application is running (Calico Cloud login -> <img src="Images/icon-1.png" alt="Service Graph" width="30"> -> Views: Default -> Double-click on hipstershop ns  <img src="Images/icon-2.png" alt="Hipstershop Namespace" width="30"> )
+#### i. Go to the Dynamic Service and Threat Graph in the hipstershop namespace, where the Online Boutique application is running (Calico Cloud login -> <img src="Images/icon-1.png" alt="Service Graph" width="30"> -> Views: Default -> Double-click on hipstershop ns  <img src="Images/icon-2.png" alt="Hipstershop Namespace" width="40"> )
 
 <p align="center">
   <img src="Images/5.m2lab1-5.png" alt="Service Graph" align="center" width="800">
@@ -86,7 +86,7 @@ failed to complete the order
 
 #### n. As the flow did not match with security policy, let’s review the Security Policy created for the paymentservice.
 
-#### o. When opening the Security Policy paymentservice, we can see that 0 Endpoints are associated with that policy:
+#### o. When opening the Security Policy paymentservice, we can see that "0" Endpoints are associated with that policy:
 
 <p align="center">
   <img src="Images/11.m2lab1-11.png" alt="Security Policy - No endpoints" align="center" width="800">
@@ -268,7 +268,7 @@ failed to complete the order
 
 #### c. Type "99" and press “Enter” to exit
 
-#### d. Opening the Online Boutique with the URL shown through the command below and Trying to access the Online Boutique we get the error: “504 Gateway Time-out”
+#### d. Opening the Online Boutique with the URL shown through the command below and Trying to access the Online Boutique we get the error: *“504 Gateway Time-out”*
 
 ```bash
 echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).lynx.tigera.ca
