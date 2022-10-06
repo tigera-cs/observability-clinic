@@ -619,7 +619,7 @@ A global default deny network policy provides an enhanced security posture – s
 ### k. By default, the felix configuration will flush the flow logs every 5 minutes (300s) but for the lab purpose, we will reduce it to 10s to allow the flows to be visualized in the UI quickly.
 
 ```bash
-kubectl patch felixconfiguration default --type='merge' -p '{"spec":{"flowLogsFlushInterval”:”10s"}}'
+kubectl patch felixconfiguration default --type='merge' -p '{"spec":{"flowLogsFlushInterval":"10s"}}'
 ```
 
 In a production environment, we do recommend considering the impact of reducing intervals for 10s as it will greatly increase the amount of data ingested by ElasticSearch hence the storage requirements for keeping those logs will also increase.
