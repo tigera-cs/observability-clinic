@@ -206,6 +206,11 @@ Therefore, the Security Policy app-hipstershop.checkoutservice has denied this f
 	
 The flow logs are difficult to read but you can parse them in json format with “jq” as per the output below:
 
+To install "jq" runs the command below:
+```bash
+sudo apt-get install jq -y
+```
+
 ```bash
 grep multitool /var/log/calico/flowlogs/flows.log | grep -i deny -m 1 | jq
 ```
