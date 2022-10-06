@@ -8,7 +8,7 @@
 #### a. Opening the lab and run the script below:
 
 ```bash
-/home/tigera/tsworkshop/workshop1/lab-script.sh
+/home/tigera/observability-clinic/tsworkshop/workshop1lab-script.sh
 ```
 
 #### b. Typing the option “1” (Demo Break Online Boutique - Dynamic Service and Threat Graph) and press “Enter”
@@ -130,7 +130,7 @@ paymentservice-584567958d-5z8jx          1/1     Running   1 (38h ago)   7d    a
 #### a. Open the lab and run the script below:
 
 ```bash
-/home/tigera/tsworkshop/workshop1/lab-script.sh
+/home/tigera/observability-clinic/tsworkshop/workshop1lab-script.sh
 ```
 #### b. Type the option “2” (LAB Break Online Boutique - Dynamic Service and Threat Graph) and press “Enter”
 
@@ -184,7 +184,7 @@ failed to complete the order
 #### a. Opening the lab and run the script below:
 
 ```bash
-/home/tigera/tsworkshop/workshop1/lab-script.sh
+/home/tigera/observability-clinic/tsworkshop/workshop1lab-script.sh
 ```
 
 #### b. Typing the option “3” (Demo Break Online Boutique - Flow Visualizations) and press “Enter”
@@ -222,7 +222,7 @@ echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://"
 #### a. Open the lab and run the script below:
 
 ```bash
-/home/tigera/tsworkshop/workshop1/lab-script.sh
+/home/tigera/observability-clinic/tsworkshop/workshop1lab-script.sh
 ```
 
 #### b. Type the option “4” (LAB Break Online Boutique - Flow Visualizations) and press “Enter”
@@ -261,7 +261,7 @@ failed to complete the order
 #### a. Opening the lab and run the script below:
 
 ```bash
-/home/tigera/tsworkshop/workshop1/lab-script.sh
+/home/tigera/observability-clinic/tsworkshop/workshop1lab-script.sh
 ```
 
 #### b. Typing the option “5” (Demo Break Online Boutique - Kibana) and press “Enter”
@@ -319,7 +319,7 @@ echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://"
 #### a. Open the lab and run the script below:
 
 ```bash
-/home/tigera/tsworkshop/workshop1/lab-script.sh
+/home/tigera/observability-clinic/tsworkshop/workshop1lab-script.sh
 ```
 
 #### b. Type the option “6” (LAB Break Online Boutique - Kibana) and press “Enter”

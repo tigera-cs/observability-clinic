@@ -95,7 +95,7 @@ sudo iptables -nvL cali-po-_sQdl6e7ekf9DS2UYNem | egrep 'multiport|RETURN'
 #### h. Now, let's change the checkoutservice Security Policy ingress rule to “deny". For that, open a new session for the bastion node, run the script below and type the option “7” (Demo Change Ingress Rule to Deny Track iptables rules) and press “Enter”
 
 ```bash
-/home/tigera/tsworkshop/workshop1/lab-script.sh
+/home/tigera/observability-clinic/tsworkshop/workshop1lab-script.sh
 ```
 
 #### i. Get back on the worker node terminal and run the iptables command again on the cali-pi-XXX chain.
@@ -322,7 +322,7 @@ kubectl delete pod multitool
 #### a. Open the lab and run the script below:
 
 ```bash
-/home/tigera/tsworkshop/workshop1/lab-script.sh
+/home/tigera/observability-clinic/tsworkshop/workshop1lab-script.sh
 ```
 
 #### b. Type the option “8” (LAB Break Online Boutique - Flow Logs) and press “Enter”
@@ -404,7 +404,7 @@ Address: 147.75.40.148
 
 #### a. Open the lab and run the script below:
 ```bash
-/home/tigera/tsworkshop/workshop1/lab-script.sh
+/home/tigera/observability-clinic/tsworkshop/workshop1lab-script.sh
 ```
 
 #### b. Type the option “9” (LAB Break HEP non-k8s) and press “Enter”

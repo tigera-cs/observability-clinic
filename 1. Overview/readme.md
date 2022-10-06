@@ -141,18 +141,26 @@ monitor                         True        False         False      100s
 | shippingservice         | app=shippingservice       | 50051/TCP           |
 
 
-### b. Create a namespace 'hipstershop' which the application will be deployed in:
+### b. Clone the Observability Clinic Repo and grant the executable permission for the lab's script
+```bash
+git clone https://github.com/tigera-cs/observability-clinic.git
+```
+```bash
+chmod +x /home/tigera/observability-clinic/tsworkshop/workshop1/lab-script.sh 
+```
+
+### c. Create a namespace 'hipstershop' which the application will be deployed in:
 
 ```bash
 kubectl create namespace hipstershop
 ```
-### c. Deploy the application Online Boutique (Hipstershop) to the namespace. This will install the application from the Google repository.
+### d. Deploy the application Online Boutique (Hipstershop) to the namespace. This will install the application from the Google repository.
 
 ```bash
 kubectl apply -n hipstershop -f https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/main/release/kubernetes-manifests.yaml
 ```
 
-### d. Wait for all PODs get in a running status
+### e. Wait for all PODs get in a running status
 
 ```bash
 watch kubectl get pods -n hipstershop
@@ -173,18 +181,19 @@ redis-cart-5b569cd47-l29tx               1/1     Running   0          2m40s
 shippingservice-79849ddf8-nlfjv          1/1     Running   0          2m40s
 ```
 
-### e. Configure the ingress 
+### f. Configure the ingress 
 
 ```bash
-sed -i "s,template,$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1),g" /home/tigera/tsworkshop/workshop1/manifests/1-ingress-nginx-hipstershop.yaml
-kubectl apply -f /home/tigera/tsworkshop/workshop1/manifests/1-ingress-nginx-hipstershop.yaml
+sed -i "s,template,$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1),g" /home/tigera/observability-clinic/tsworkshop/workshop1/manifests/1-ingress-nginx-hipstershop.yaml
+kubectl apply -f /home/tigera/observability-clinic/tsworkshop/workshop1/manifests/1-ingress-nginx-hipstershop.yaml
 ```
 
-### f. Browse the URL shown in the command’s output below to test the Hipstershop Application:
+### g. Browse the URL shown in the command’s output below to test the Hipstershop Application:
 
 ```bash
 echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).lynx.tigera.ca
 ```
+
 
 ## 5. Configure Host EndPoints (Kubernetes and non-Kubernetes nodes)
 
@@ -346,7 +355,7 @@ EOF
 Or
 
 ```bash
-kubectl apply -f /home/tigera/tsworkshop/workshop1/manifests/2-hep-external.yaml
+kubectl apply -f /home/tigera/observability-clinic/tsworkshop/workshop1/manifests/2-hep-external.yaml
 ```
 
 ### j. Check if the external-bastion HEP has been successfully created and check its configuration:
@@ -420,7 +429,7 @@ ping: sendmsg: Operation not permitted
 ### a. Create the Security, Platform and App-Hipstershop tiers:
 
 ```bash
-kubectl apply -f /home/tigera/tsworkshop/workshop1/manifests/3-tiers.yaml 
+kubectl apply -f /home/tigera/observability-clinic/tsworkshop/workshop1/manifests/3-tiers.yaml 
 ```
 
 ### b. Check if the tiers were successfully created:
@@ -450,7 +459,7 @@ The UI should show the tiers created like the picture below:
 ### c. Apply the GlobalNetworkSets:
 
 ```bash
-kubectl apply -f /home/tigera/tsworkshop/workshop1/manifests/4-globalnetworksets.yaml 
+kubectl apply -f /home/tigera/observability-clinic/tsworkshop/workshop1/manifests/4-globalnetworksets.yaml 
 ```
 
 The globalnetworksets applied:
@@ -464,12 +473,12 @@ The globalnetworksets applied:
 
 Allow Ingress and Egress traffic to kube-dns:
 ```bash
-kubectl apply -f /home/tigera/tsworkshop/workshop1/manifests/5-netpol-ingress-allow-pods-to-kubedns.yaml
+kubectl apply -f /home/tigera/observability-clinic/tsworkshop/workshop1/manifests/5-netpol-ingress-allow-pods-to-kubedns.yaml
 ```
 
 Apply policies for the k8s nodes and pods:
 ```bash
-kubectl apply -f /home/tigera/tsworkshop/workshop1/manifests/6-gnetpol-egress-allow-from-and-to-host.yaml 
+kubectl apply -f /home/tigera/observability-clinic/tsworkshop/workshop1/manifests/6-gnetpol-egress-allow-from-and-to-host.yaml 
 ```
 
 For the k8s HEPs (Global Network Policy):
@@ -496,12 +505,12 @@ For EndPoints:
 
 Create the Network Policy to pass the traffic from tenant=hipstershop to the next tiers.
 ```bash
-kubectl apply -f /home/tigera/tsworkshop/workshop1/manifests/7-gnetpol-pass-hipstershop.yaml
+kubectl apply -f /home/tigera/observability-clinic/tsworkshop/workshop1/manifests/7-gnetpol-pass-hipstershop.yaml
 ```
 
 Apply the Security Policies for the Hipstershop Application:
 ```bash
-kubectl apply -f /home/tigera/tsworkshop/workshop1/manifests/8-netpol-app-hipstershop.yaml 
+kubectl apply -f /home/tigera/observability-clinic/tsworkshop/workshop1/manifests/8-netpol-app-hipstershop.yaml 
 ```
 
 ### e. Configure DNS Policies for the non-k8s node:
@@ -518,7 +527,7 @@ curl: (28) Connection timed out after 5000 milliseconds
 ### g. Apply the Global Network Set and Security Policy that allows only egress traffic on HTTPS to *.google.com and *.tigera.io:
 
 ```bash
-kubectl apply -f /home/tigera/tsworkshop/workshop1/manifests/9-gnetpol-hep-external.yaml 
+kubectl apply -f /home/tigera/observability-clinic/tsworkshop/workshop1/manifests/9-gnetpol-hep-external.yaml 
 ```
 
 For non-k8s HEP - bastion node (Global Network Policy):
@@ -602,7 +611,7 @@ curl: (28) Connection timed out after 5001 milliseconds
 ### j. Apply the default deny:
 
 ```bash
-kubectl apply -f /home/tigera/tsworkshop/workshop1/manifests/10-gnetpol-deny-default.yaml
+kubectl apply -f /home/tigera/observability-clinic/tsworkshop/workshop1/manifests/10-gnetpol-deny-default.yaml
 ```
 
 A global default deny network policy provides an enhanced security posture – so pods without policy (or incorrect policy) are not allowed traffic until appropriate network policy is defined.
