@@ -505,7 +505,7 @@ For EndPoints:
 
 Create the Network Policy to pass the traffic from tenant=hipstershop to the next tiers.
 ```bash
-kubectl apply -f /home/tigera/observability-clinic/tsworkshop/workshop1/manifests/7-gnetpol-pass-hipstershop.yaml
+kubectl apply -f /home/tigera/observability-clinic/tsworkshop/workshop1/manifests/7-netpol-pass-hipstershop.yaml
 ```
 
 Apply the Security Policies for the Hipstershop Application:
