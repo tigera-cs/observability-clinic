@@ -212,7 +212,7 @@ sudo apt-get install jq -y
 ```
 
 ```bash
-grep multitool /var/log/calico/flowlogs/flows.log | grep -i deny -m 1 | jq
+grep multitool /var/log/calico/flowlogs/flows.log | grep 5050 | grep -i deny -m 1 | jq
 ```
 ```bash
 {
