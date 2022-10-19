@@ -1,142 +1,7 @@
 # Module 3 - Investigate denied flows using CLI
 
-## 1. How to track the iptables rule from a Security Policy
 
-### Demo
-
-#### a. We are going to track down the checkoutservice Security Policy rules on iptables.
-
-#### b. Verify in which node the checkoutservice pod is running:
-
-```bash
-kubectl get pods -l app=checkoutservice  -n hipstershop -o wide
-```
-```bash
-NAME                               READY   STATUS    RESTARTS       AGE   IP              NODE                                         NOMINATED NODE   READINESS GATES
-checkoutservice-598d5b586d-wsvmz   1/1     Running   66 (97m ago)   18d   10.48.127.224   ip-10-0-1-30.ca-central-1.compute.internal   <none>           <none>
-```
-
-#### c. Login on the node through SSH. In this case it is node ip-10-0-1-30.ca-central-1.compute.internal so the command would be:
-
-```bash
-ssh worker1
-```
-
-#### d. Check in iptables the cali-pi (input) and cali-po (output) chains:
-
-```bash
-sudo iptables-save  | grep checkout | grep cali-p[o,i] | grep -v nflog
-```
-```bash
--A cali-pi-_sQdl6e7ekf9DS2UYNem -p tcp -m comment --comment "cali:fwIMoHrbCWNN0i6y" -m comment --comment "Policy hipstershop/app-hipstershop.checkoutservice ingress" -m set --match-set cali40s:_DJYf5MR3V3B4fL2YDPlFn7 src -m multiport --dports 5050 -j MARK --set-xmark 0x10000/0x10000
--A cali-po-_sQdl6e7ekf9DS2UYNem -m comment --comment "cali:NrlO0UOCu-NgEXYU" -m comment --comment "Policy hipstershop/app-hipstershop.checkoutservice egress" -j MARK --set-xmark 0x0/0x180000
-```
-
-cali-pi-XXXXX > chain for input/inbound rules (ingress)
-cali-po-XXXXX > chain for output/outbound rules (egress)
-
-#### e. Check in iptables the cali-pi (input) chain, we can see the first rule to TCP/5050 marked to 0x10000 and the last rule it is returning to the previous chain the packets with mark 0x10000.
-
-```bash
-sudo iptables -nvL cali-pi-_sQdl6e7ekf9DS2UYNem
-```
-```bash
-Chain cali-pi-_sQdl6e7ekf9DS2UYNem (1 references)
- pkts bytes target     prot opt in     out     source               destination         
-    1    60 MARK       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:fwIMoHrbCWNN0i6y */ /* Policy hipstershop/app-hipstershop.checkoutservice ingress */ match-set nncali40s:_DJYf5MR3V3B4fL2YDPlFn7 src multiport dports 5050 MARK or 0x10000
-    1    60 NFLOG      all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:jtt9uTELeZiK6HTc */ mark match 0x10000/0x10000 nflog-prefix  "API0|hipstershop/app-hipstershop.checkoutservice" nflog-group 1 nflog-size 80
-    1    60 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:49i8yZ9WeeBJcJFx */ mark match 0x10000/0x10000
-```
-
-#### f. The traffic marked with 0x10000 will be returned to the previous chains until reaching the chain cali-FORWARD and when we list the cali-FORWARD rules, the rule with the comment “Policy explicitly accepted packet” is accepting all packets marked with 0x10000 hence, this traffic is allowed.
-
-```bash
-sudo iptables -nvL cali-FORWARD
-```
-```bash
-Chain cali-FORWARD (1 references)
- pkts bytes target     prot opt in     out     source               destination         
-6114K 1083M NFLOG      udp  --  *      cali+   0.0.0.0/0            0.0.0.0/0            /* cali:M398jh6z4KAudBHO */ ctstate ESTABLISHED ctorigdstport 53 ctorigdst 10.49.0.10 nflog-prefix  DNS nflog-group 3 nflog-size 1024
-6114K 1083M NFLOG      udp  --  *      cali+   0.0.0.0/0            0.0.0.0/0            /* cali:Y0ublHUopU6Z5cTD */ ctstate ESTABLISHED ctorigdstport 53 ctorigdst 10.49.0.10 nflog-prefix  DNS nflog-group 3 nflog-size 1024
-    0     0 NFLOG      udp  --  *      cali+   0.0.0.0/0            0.0.0.0/0            /* cali:CMrdUPzr6ZBH-Fc2 */ ctstate ESTABLISHED ctorigdstport 53 ctorigdst 10.0.0.2 nflog-prefix  DNS nflog-group 3 nflog-size 1024
-5694K  564M NFLOG      udp  --  cali+  *       0.0.0.0/0            0.0.0.0/0            /* cali:8ifjUVKTn1dXEp-r */ ctstate NEW ctorigdstport 53 ctorigdst 10.49.0.10 nflog-prefix  DNS nflog-group 3 nflog-size 1024
-5694K  564M NFLOG      udp  --  cali+  *       0.0.0.0/0            0.0.0.0/0            /* cali:Xr4GlKIa-LDbIRg- */ ctstate NEW ctorigdstport 53 ctorigdst 10.49.0.10 nflog-prefix  DNS nflog-group 3 nflog-size 1024
-    0     0 NFLOG      udp  --  cali+  *       0.0.0.0/0            0.0.0.0/0            /* cali:hriZM2GuaOc-jiJT */ ctstate NEW ctorigdstport 53 ctorigdst 10.0.0.2 nflog-prefix  DNS nflog-group 3 nflog-size 1024
- 415M   97G MARK       all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:n_AfHpxjBIfRlCUE */ MARK and 0xffc5ffff
- 415M   97G cali-from-hep-forward  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:N1ZUoOipTUqxYp4j */ mark match 0x0/0x10000
-7751K  710M cali-from-wl-dispatch  all  --  cali+  *       0.0.0.0/0            0.0.0.0/0            /* cali:nxYkktP8fafPqIg_ */
-2345K  147M cali-to-wl-dispatch  all  --  *      cali+   0.0.0.0/0            0.0.0.0/0            /* cali:KQs0yIM9YcZ9wY0u */
-8320K  722M cali-to-hep-forward  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:8AipZb0bB3Xm7Ken */
-8320K  722M cali-cidr-block  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:lVvjuxobYEAxjV5D */
-8320K  722M ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:oDPPXeWnTTgDrXjp */ /* Policy explicitly accepted packet. */ mark match 0x10000/0x10000
-    0     0 MARK       all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:RhxWn9tXI1t4BaJg */ MARK or 0x10000
-```
-
-#### g. Check in iptables the cali-po (output) chain, returned from step “d”, we can see each rule from the egress Security Policy and it is also marked with 0x10000. After each mark, there is a RETURN rule for mark 0x10000 hence it will be returned to the previous chains until reaching the chain (cali-FORWARD) and will be allowed from the same rule as we showed above.
-
-```bash
-sudo iptables -nvL cali-po-_sQdl6e7ekf9DS2UYNem | egrep 'multiport|RETURN'
-```
-```bash
-    0     0 MARK       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:z0YCrxgn5KdJMzaY */ multiport dports 7070 mark match 0x80000/0x80000 MARK or 0x10000
-    0     0 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:ReAs2LI2rMw4arIm */ mark match 0x10000/0x10000
-    0     0 MARK       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:Sif45SsQ2CyimuzW */ multiport dports 8080 mark match 0x80000/0x80000 MARK or 0x10000
-    0     0 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:FSi1rqqyk8EzAG9g */ mark match 0x10000/0x10000
-    0     0 MARK       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:FPO1600v3_ymKPvA */ multiport dports 50051 mark match 0x80000/0x80000 MARK or 0x10000
-    0     0 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:2uY8pBoUFrB57t5c */ mark match 0x10000/0x10000
-    0     0 MARK       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:1dQCkNtvK0juGugU */ multiport dports 3550 mark match 0x80000/0x80000 MARK or 0x10000
-    0     0 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:zeNtGdRwuGRinzdl */ mark match 0x10000/0x10000
-    0     0 MARK       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:MNVVmfgkm1FOnefG */ multiport dports 50051 mark match 0x80000/0x80000 MARK or 0x10000
-    0     0 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:M3HvFiZhX-cfL5D- */ mark match 0x10000/0x10000
-    0     0 MARK       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:wwYIygv78L9vTmpM */ multiport dports 7000 mark match 0x80000/0x80000 MARK or 0x10000
-    0     0 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:wVcE_67Yk6DizRI0 */ mark match 0x10000/0x10000
-```
-
-#### h. Now, let's change the checkoutservice Security Policy ingress rule to “deny". For that, open a new session for the bastion node, run the script below and type the option “7” (Demo Change Ingress Rule to Deny Track iptables rules) and press “Enter”
-
-```bash
-/home/tigera/observability-clinic/tsworkshop/workshop1/lab-script.sh
-```
-
-#### i. Get back on the worker node terminal and run the iptables command again on the cali-pi-XXX chain.
-
-If we track down this rule, we can see that the traffic was marked as 0x40000 and the last rule is dropping this traffic.
-
-```bash
-sudo iptables -nvL cali-pi-_sQdl6e7ekf9DS2UYNem
-```
-```bash
-Chain cali-pi-_sQdl6e7ekf9DS2UYNem (1 references)
- pkts bytes target     prot opt in     out     source               destination         
-    0     0 MARK       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:g4_2VFU0HlDzmg6t */ /* Policy hipstershop/app-hipstershop.checkoutservice ingress */ match-set cali40s:_DJYf5MR3V3B4fL2YDPlFn7 src multiport dports 5050 MARK or 0x40000
-    0     0 NFQUEUE    all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:0AUyjrsP_LEvZJla */ mark match 0x200000/0x200000 mark match ! 0x400000/0x400000 mark match 0x40000/0x40000 NFQUEUE num 100
-    0     0 NFLOG      all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:dBRq4pgnpcbIpwoH */ mark match 0x40000/0x40000 nflog-prefix  "DPI0|hipstershop/app-hipstershop.checkoutservice" nflog-group 1 nflog-size 80
-    0     0 DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:RFn2XJDp5NZuj-Kc */ mark match 0x40000/0x40000
-```
-
-#### j. Log out of the worker node by typing exit
-
-#### k. To revert the checkoutservice Security Policy ingress rule to allow, go back to the the script on bastion node and type the option “71” (Demo Revert to Allow Track iptables rules) and press “Enter”
-
-
-The diagrams below shows the chain’s flow for the Ingress and Egress Rules to/from a POD:
-
-
-<p align="center">
-  <img src="Images/1.m3lab1-1.jpg" alt="Ingress chains" align="center" width="800">
-</p>
-
-<p align="center">
-  <img src="Images/2.m3lab1-2.jpg" alt="Egress chains" align="center" width="800">
-</p>
-
-
-### LAB
-
-Following the same instructions provided in the Demo, track down the cartservice Security Policy rules on iptables.
-
-
-## 2. How to identify denied flows through the logs
+## 1. How to identify denied flows through the logs
 
 ### Demo
 
@@ -359,7 +224,7 @@ failed to complete the order
 
 #### h. To revert back the misconfiguration applied, run the script and type “81” (LAB Fix Online Boutique - Flow Logs) and press Enter. To exit type "99" and press “Enter”.
 
-## 3. How to identify denied flows on linux non-k8s node
+## 2. How to identify denied flows on linux non-k8s node
 
 ### Demo
 
@@ -436,3 +301,139 @@ ssh: connect to host ip-10-0-1-30.ca-central-1.compute.internal port 22: Connect
 #### f. Investigate through the syslog to verify which flows have been denied and the Security Policy related to it, and how to fix this issue. Remember that the SSH (TCP 22) has been configured in the FAILSAFE OUTBOUND in **[Module 1 - Topic 5](https://github.com/tigera-cs/observability-clinic/blob/main/1.%20Overview/readme.md#h-configure-the-calico-service-in-the-bastion-host)**.
 
 #### g. To revert back the misconfiguration applied, run the script and type “91” (LAB Fix HEP non-k8s) and press Enter. To exit type "99" and press “Enter”.
+
+
+## 3. How to track the iptables rule from a Security Policy (OPTIONAL)
+
+### Demo
+
+#### a. We are going to track down the checkoutservice Security Policy rules on iptables.
+
+#### b. Verify in which node the checkoutservice pod is running:
+
+```bash
+kubectl get pods -l app=checkoutservice  -n hipstershop -o wide
+```
+```bash
+NAME                               READY   STATUS    RESTARTS       AGE   IP              NODE                                         NOMINATED NODE   READINESS GATES
+checkoutservice-598d5b586d-wsvmz   1/1     Running   66 (97m ago)   18d   10.48.127.224   ip-10-0-1-30.ca-central-1.compute.internal   <none>           <none>
+```
+
+#### c. Login on the node through SSH. In this case it is node ip-10-0-1-30.ca-central-1.compute.internal so the command would be:
+
+```bash
+ssh worker1
+```
+
+#### d. Check in iptables the cali-pi (input) and cali-po (output) chains:
+
+```bash
+sudo iptables-save  | grep checkout | grep cali-p[o,i] | grep -v nflog
+```
+```bash
+-A cali-pi-_sQdl6e7ekf9DS2UYNem -p tcp -m comment --comment "cali:fwIMoHrbCWNN0i6y" -m comment --comment "Policy hipstershop/app-hipstershop.checkoutservice ingress" -m set --match-set cali40s:_DJYf5MR3V3B4fL2YDPlFn7 src -m multiport --dports 5050 -j MARK --set-xmark 0x10000/0x10000
+-A cali-po-_sQdl6e7ekf9DS2UYNem -m comment --comment "cali:NrlO0UOCu-NgEXYU" -m comment --comment "Policy hipstershop/app-hipstershop.checkoutservice egress" -j MARK --set-xmark 0x0/0x180000
+```
+
+cali-pi-XXXXX > chain for input/inbound rules (ingress)
+cali-po-XXXXX > chain for output/outbound rules (egress)
+
+#### e. Check in iptables the cali-pi (input) chain, we can see the first rule to TCP/5050 marked to 0x10000 and the last rule it is returning to the previous chain the packets with mark 0x10000.
+
+```bash
+sudo iptables -nvL cali-pi-_sQdl6e7ekf9DS2UYNem
+```
+```bash
+Chain cali-pi-_sQdl6e7ekf9DS2UYNem (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    1    60 MARK       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:fwIMoHrbCWNN0i6y */ /* Policy hipstershop/app-hipstershop.checkoutservice ingress */ match-set nncali40s:_DJYf5MR3V3B4fL2YDPlFn7 src multiport dports 5050 MARK or 0x10000
+    1    60 NFLOG      all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:jtt9uTELeZiK6HTc */ mark match 0x10000/0x10000 nflog-prefix  "API0|hipstershop/app-hipstershop.checkoutservice" nflog-group 1 nflog-size 80
+    1    60 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:49i8yZ9WeeBJcJFx */ mark match 0x10000/0x10000
+```
+
+#### f. The traffic marked with 0x10000 will be returned to the previous chains until reaching the chain cali-FORWARD and when we list the cali-FORWARD rules, the rule with the comment “Policy explicitly accepted packet” is accepting all packets marked with 0x10000 hence, this traffic is allowed.
+
+```bash
+sudo iptables -nvL cali-FORWARD
+```
+```bash
+Chain cali-FORWARD (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+6114K 1083M NFLOG      udp  --  *      cali+   0.0.0.0/0            0.0.0.0/0            /* cali:M398jh6z4KAudBHO */ ctstate ESTABLISHED ctorigdstport 53 ctorigdst 10.49.0.10 nflog-prefix  DNS nflog-group 3 nflog-size 1024
+6114K 1083M NFLOG      udp  --  *      cali+   0.0.0.0/0            0.0.0.0/0            /* cali:Y0ublHUopU6Z5cTD */ ctstate ESTABLISHED ctorigdstport 53 ctorigdst 10.49.0.10 nflog-prefix  DNS nflog-group 3 nflog-size 1024
+    0     0 NFLOG      udp  --  *      cali+   0.0.0.0/0            0.0.0.0/0            /* cali:CMrdUPzr6ZBH-Fc2 */ ctstate ESTABLISHED ctorigdstport 53 ctorigdst 10.0.0.2 nflog-prefix  DNS nflog-group 3 nflog-size 1024
+5694K  564M NFLOG      udp  --  cali+  *       0.0.0.0/0            0.0.0.0/0            /* cali:8ifjUVKTn1dXEp-r */ ctstate NEW ctorigdstport 53 ctorigdst 10.49.0.10 nflog-prefix  DNS nflog-group 3 nflog-size 1024
+5694K  564M NFLOG      udp  --  cali+  *       0.0.0.0/0            0.0.0.0/0            /* cali:Xr4GlKIa-LDbIRg- */ ctstate NEW ctorigdstport 53 ctorigdst 10.49.0.10 nflog-prefix  DNS nflog-group 3 nflog-size 1024
+    0     0 NFLOG      udp  --  cali+  *       0.0.0.0/0            0.0.0.0/0            /* cali:hriZM2GuaOc-jiJT */ ctstate NEW ctorigdstport 53 ctorigdst 10.0.0.2 nflog-prefix  DNS nflog-group 3 nflog-size 1024
+ 415M   97G MARK       all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:n_AfHpxjBIfRlCUE */ MARK and 0xffc5ffff
+ 415M   97G cali-from-hep-forward  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:N1ZUoOipTUqxYp4j */ mark match 0x0/0x10000
+7751K  710M cali-from-wl-dispatch  all  --  cali+  *       0.0.0.0/0            0.0.0.0/0            /* cali:nxYkktP8fafPqIg_ */
+2345K  147M cali-to-wl-dispatch  all  --  *      cali+   0.0.0.0/0            0.0.0.0/0            /* cali:KQs0yIM9YcZ9wY0u */
+8320K  722M cali-to-hep-forward  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:8AipZb0bB3Xm7Ken */
+8320K  722M cali-cidr-block  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:lVvjuxobYEAxjV5D */
+8320K  722M ACCEPT     all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:oDPPXeWnTTgDrXjp */ /* Policy explicitly accepted packet. */ mark match 0x10000/0x10000
+    0     0 MARK       all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:RhxWn9tXI1t4BaJg */ MARK or 0x10000
+```
+
+#### g. Check in iptables the cali-po (output) chain, returned from step “d”, we can see each rule from the egress Security Policy and it is also marked with 0x10000. After each mark, there is a RETURN rule for mark 0x10000 hence it will be returned to the previous chains until reaching the chain (cali-FORWARD) and will be allowed from the same rule as we showed above.
+
+```bash
+sudo iptables -nvL cali-po-_sQdl6e7ekf9DS2UYNem | egrep 'multiport|RETURN'
+```
+```bash
+    0     0 MARK       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:z0YCrxgn5KdJMzaY */ multiport dports 7070 mark match 0x80000/0x80000 MARK or 0x10000
+    0     0 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:ReAs2LI2rMw4arIm */ mark match 0x10000/0x10000
+    0     0 MARK       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:Sif45SsQ2CyimuzW */ multiport dports 8080 mark match 0x80000/0x80000 MARK or 0x10000
+    0     0 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:FSi1rqqyk8EzAG9g */ mark match 0x10000/0x10000
+    0     0 MARK       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:FPO1600v3_ymKPvA */ multiport dports 50051 mark match 0x80000/0x80000 MARK or 0x10000
+    0     0 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:2uY8pBoUFrB57t5c */ mark match 0x10000/0x10000
+    0     0 MARK       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:1dQCkNtvK0juGugU */ multiport dports 3550 mark match 0x80000/0x80000 MARK or 0x10000
+    0     0 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:zeNtGdRwuGRinzdl */ mark match 0x10000/0x10000
+    0     0 MARK       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:MNVVmfgkm1FOnefG */ multiport dports 50051 mark match 0x80000/0x80000 MARK or 0x10000
+    0     0 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:M3HvFiZhX-cfL5D- */ mark match 0x10000/0x10000
+    0     0 MARK       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:wwYIygv78L9vTmpM */ multiport dports 7000 mark match 0x80000/0x80000 MARK or 0x10000
+    0     0 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:wVcE_67Yk6DizRI0 */ mark match 0x10000/0x10000
+```
+
+#### h. Now, let's change the checkoutservice Security Policy ingress rule to “deny". For that, open a new session for the bastion node, run the script below and type the option “7” (Demo Change Ingress Rule to Deny Track iptables rules) and press “Enter”
+
+```bash
+/home/tigera/observability-clinic/tsworkshop/workshop1/lab-script.sh
+```
+
+#### i. Get back on the worker node terminal and run the iptables command again on the cali-pi-XXX chain.
+
+If we track down this rule, we can see that the traffic was marked as 0x40000 and the last rule is dropping this traffic.
+
+```bash
+sudo iptables -nvL cali-pi-_sQdl6e7ekf9DS2UYNem
+```
+```bash
+Chain cali-pi-_sQdl6e7ekf9DS2UYNem (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 MARK       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:g4_2VFU0HlDzmg6t */ /* Policy hipstershop/app-hipstershop.checkoutservice ingress */ match-set cali40s:_DJYf5MR3V3B4fL2YDPlFn7 src multiport dports 5050 MARK or 0x40000
+    0     0 NFQUEUE    all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:0AUyjrsP_LEvZJla */ mark match 0x200000/0x200000 mark match ! 0x400000/0x400000 mark match 0x40000/0x40000 NFQUEUE num 100
+    0     0 NFLOG      all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:dBRq4pgnpcbIpwoH */ mark match 0x40000/0x40000 nflog-prefix  "DPI0|hipstershop/app-hipstershop.checkoutservice" nflog-group 1 nflog-size 80
+    0     0 DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* cali:RFn2XJDp5NZuj-Kc */ mark match 0x40000/0x40000
+```
+
+#### j. Log out of the worker node by typing exit
+
+#### k. To revert the checkoutservice Security Policy ingress rule to allow, go back to the the script on bastion node and type the option “71” (Demo Revert to Allow Track iptables rules) and press “Enter”
+
+
+The diagrams below shows the chain’s flow for the Ingress and Egress Rules to/from a POD:
+
+
+<p align="center">
+  <img src="Images/1.m3lab1-1.jpg" alt="Ingress chains" align="center" width="800">
+</p>
+
+<p align="center">
+  <img src="Images/2.m3lab1-2.jpg" alt="Egress chains" align="center" width="800">
+</p>
+
+
+### LAB
+
+Following the same instructions provided in the Demo, track down the cartservice Security Policy rules on iptables.
