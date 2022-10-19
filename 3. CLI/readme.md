@@ -429,6 +429,8 @@ The diagrams below shows the chain’s flow for the Ingress and Egress Rules to/
   <img src="Images/1.m3lab1-1.jpg" alt="Ingress chains" align="center" width="800">
 </p>
 
+---
+
 <p align="center">
   <img src="Images/2.m3lab1-2.jpg" alt="Egress chains" align="center" width="800">
 </p>
