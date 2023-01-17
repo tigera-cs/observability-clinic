@@ -157,7 +157,7 @@ kubectl create namespace hipstershop
 ### d. Deploy the application Online Boutique (Hipstershop) to the namespace. This will install the application from the Google repository.
 
 ```bash
-kubectl apply -n hipstershop -f https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/main/release/kubernetes-manifests.yaml
+kubectl apply -n hipstershop -f https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/v0.3.9/release/kubernetes-manifests.yaml
 ```
 
 ### e. Wait for all PODs get in a running status
