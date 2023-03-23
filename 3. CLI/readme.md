@@ -274,6 +274,7 @@ Address: 147.75.40.148
 
 #### a. Open the lab and run the script below:
 ```bash
+kubectl patch kubecontrollersconfiguration default --patch='{"spec": {"controllers": {"node": {"hostEndpoint": {"autoCreate": "Enabled"}}}}}'
 /home/tigera/observability-clinic/tsworkshop/workshop1/lab-script.sh
 ```
 
@@ -300,8 +301,11 @@ ssh: connect to host ip-10-0-1-30.ca-central-1.compute.internal port 22: Connect
 
 #### f. Investigate through the syslog to verify which flows have been denied and the Security Policy related to it, and how to fix this issue. Remember that the SSH (TCP 22) has been configured in the FAILSAFE OUTBOUND in **[Module 1 - Topic 5](https://github.com/tigera-cs/observability-clinic/blob/main/1.%20Overview/readme.md#h-configure-the-calico-service-in-the-bastion-host)**.
 
-#### g. To revert back the misconfiguration applied, run the script and type “91” (LAB Fix HEP non-k8s) and press Enter. To exit type "99" and press “Enter”.
+#### g. To revert back the misconfiguration applied, run the script and type “91” (LAB Fix HEP non-k8s) and press Enter. To exit type "99" and press “Enter”. And run the below patch command
 
+```bash
+kubectl patch kubecontrollersconfiguration default --patch='{"spec": {"controllers": {"node": {"hostEndpoint": {"autoCreate": "Disabled"}}}}}'
+```
 
 ## 3. How to track the iptables rule from a Security Policy (OPTIONAL)
 
