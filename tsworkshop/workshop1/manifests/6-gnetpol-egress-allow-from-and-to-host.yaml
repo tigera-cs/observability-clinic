@@ -2,6 +2,100 @@
 apiVersion: projectcalico.org/v3
 kind: GlobalNetworkPolicy
 metadata:
+  name: security.allowed-flows-all-heps
+spec:
+  tier: security
+  order: -10
+  selector: projectcalico.org/created-by == "calico-kube-controllers"
+  ingress:
+  # localhost to localhost ingress
+  - action: Allow
+    destination:
+      nets:
+      - 169.254.169.254/32
+  - action: Allow
+    destination:
+      nets:
+      - 127.0.0.0/8
+  # kube-apiserver to kubelet ingress
+  - action: Allow
+    protocol: TCP
+    source:
+      selector: has(node-role.kubernetes.io/control-plane)
+    destination:
+      ports:
+      - 10250
+  # prometheus to calico-node ingress
+  - action: Allow
+    protocol: TCP
+    source:
+      selector: projectcalico.org/created-by == "calico-kube-controllers"
+    destination:
+      ports:
+      - 9081
+      - 9091
+      - 9900
+  egress:
+  # localhost to localhost egress (both ingress&egress required, conntrack entry stays in SYN_SENT with egress only?)
+  - action: Allow
+    destination:
+      nets:
+      - 169.254.169.254/32
+  - action: Allow
+    destination:
+      nets:
+      - 127.0.0.0/8
+  # operator to es-gateway egress
+  - action: Allow
+    protocol: TCP
+    destination:
+      selector: k8s-app == 'tigera-secure-es-gateway'
+      namespaceSelector: projectcalico.org/name == 'tigera-elasticsearch'
+  # kubelet to registry egress
+  - action: Allow
+    destination:
+      nets:
+        # quay.io
+        - 34.238.54.37/32
+        - 52.203.129.140/32
+        - 3.224.202.81/32
+        - 54.163.152.191/32
+        - 44.206.77.171/32
+        - 52.54.221.77/32
+        - 18.172.122.91/32
+        - 13.249.85.82/32
+        - 104.18.15.56/32
+        # registry.k8s.io
+        - 34.107.244.51/32
+        - 142.250.136.82/32
+        - 173.194.74.82/32
+---
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: security.allowed-flows-control-plane-heps
+spec:
+  tier: security
+  order: -5
+  selector: has(node-role.kubernetes.io/control-plane)
+  egress:
+  # kube-apiserver to kubelet egress (selects all destinations to include self)
+  - action: Allow
+    destination:
+      ports:
+      - 10250
+    protocol: TCP
+  # kube-apiserver to tigera-apiserver egress
+  - action: Allow
+    protocol: TCP
+    destination:
+      namespaceSelector: projectcalico.org/name == 'tigera-system'
+      selector: k8s-app == 'tigera-apiserver'
+---
+---
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
   name: security.egress-allow-from-and-to-host
 spec:
   tier: security
