@@ -233,16 +233,26 @@ rtt min/avg/max/mdev = 1.676/1.754/2.005/0.126 ms
 
 ```bash
 sudo apt-get install -y ipset
+```
 sudo apt install -y libpcap0.8
 sudo ln -s /lib/x86_64-linux-gnu/libpcap.so.0.8 /lib/x86_64-linux-gnu/libpcap.so.1
 ```
 
 The ipset must be installed to set up IP Sets in the linux kernel and it will be used by iptables to enforce rules with IP Sets.
  
-### f. Grab the calico-node binary from one of the calico-node pods:
+### f. Grab the calico-node binary quay.io:
 
 ```bash
-kubectl exec -it -n calico-system $(kubectl get po -n calico-system -owide | grep calico-node | grep ip-10-0-1-20.ca-central-1.compute.internal | awk '{print $1}') -- cat /bin/calico-node > cnx-node
+sudo apt install -y docker.io
+```
+```bash
+sudo mkdir -p /root/.docker
+sudo cp config.json /root/.docker/config.json
+sudo docker pull quay.io/tigera/cnx-node:v3.21.1
+```
+```bash
+sudo docker run --rm -v $(pwd):/out quay.io/tigera/cnx-node:v3.21.1 \
+  sh -c "cp /bin/calico-node /out/"
 ```
 
 The cnx-node binary will be used to run the felix on that to enforce the Security Policies/iptables rules as per the **[documentation](https://docs.tigera.io/reference/architecture/overview)**.
@@ -250,7 +260,7 @@ The cnx-node binary will be used to run the felix on that to enforce the Securit
 ### g. Change the user/group and permissions to the binary as below:
 
 ```bash
-sudo mv cnx-node /usr/local/bin/
+sudo mv calico-node /usr/local/bin/cnx-node
 sudo chown root.root /usr/local/bin/cnx-node
 sudo chmod 755 /usr/local/bin/cnx-node
 ```
