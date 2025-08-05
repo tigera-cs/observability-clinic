@@ -240,7 +240,7 @@ sudo ln -sf /lib/x86_64-linux-gnu/libpcap.so.0.8 /lib/x86_64-linux-gnu/libpcap.s
 ```
 The ipset must be installed to set up IP Sets in the linux kernel and it will be used by iptables to enforce rules with IP Sets.
  
-### f. Grab the calico-node binary quay.io:
+### f. Grab the calico-node binary from quay.io:
 
 ```bash
 sudo apt install -y docker.io
