@@ -17,7 +17,7 @@
 
 #### d. Open the Online Boutique with the URL shown through the command below and select any product:
 ```bash
-echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).lynx.tigera.ca
+echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).training.tigera.ca
 ```
 
 <p align="center">
@@ -139,7 +139,7 @@ paymentservice-584567958d-5z8jx          1/1     Running   1 (38h ago)   7d    a
 #### d. Open the browser with the URL shown through the command below:
 
 ```bash
-echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).lynx.tigera.ca
+echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).training.tigera.ca
 ```
 
 #### e. Change the currency = EUR and select any product:
@@ -194,7 +194,7 @@ failed to complete the order
 #### d. Opening the Online Boutique with the URL shown through the command below and Trying to access the Online Boutique we get the error: *“504 Gateway Time-out”*
 
 ```bash
-echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).lynx.tigera.ca
+echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).training.tigera.ca
 ```
 
 #### e. On Tigera-UI > <img src="Images/icon-3.png" alt="FlowViz" width="30"> > Flow Visualizations, we can select the Denied flows in the Status field:
@@ -232,7 +232,7 @@ echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://"
 #### d. Open the browser with the URL shown through the command below:
 
 ```bash
-echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).lynx.tigera.ca
+echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).training.tigera.ca
 ```
 
 #### e. Select any product(s), add to the Cart and click on “Place Order”.
@@ -271,7 +271,7 @@ failed to complete the order
 #### d. Opening the Online Boutique with the URL shown through the command below and Trying to access the Online Boutique we get the error: *“504 Gateway Time-out”*
 
 ```bash
-echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).lynx.tigera.ca
+echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).training.tigera.ca
 ```
 
 #### e. Open the Calico Cloud UI and go to Kibana by clicking in the icon <img src="Images/icon-4.png" alt="Kibana" width="30">
@@ -329,7 +329,7 @@ echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://"
 #### d. Open the browser with the URL shown through the command below:
 
 ```bash
-echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).lynx.tigera.ca
+echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).training.tigera.ca
 ```
 
 #### e. Select any product(s), add to the Cart and click on “Place Order”.
