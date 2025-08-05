@@ -191,7 +191,7 @@ kubectl apply -f /home/tigera/observability-clinic/tsworkshop/workshop1/manifest
 ### g. Browse the URL shown in the command’s output below to test the Hipstershop Application:
 
 ```bash
-echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).lynx.tigera.ca
+echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).training.tigera.ca
 ```
 
 
@@ -463,7 +463,7 @@ kubectl apply -f /home/tigera/observability-clinic/tsworkshop/workshop1/manifest
 The globalnetworksets applied:
 * loopback: to account for the communication with loopback interface once we enable host endpoint protection (typical behavior of some linux kernel and a common trap to avoid)
 * bastion: to account for communication with bastion host, namely ssh and kube api tcp 6443 port
-* kube-api (*.lynx.tigera.ca): to account for kube-api fqdn, wildcard used for simplicity
+* kube-api (*.training.tigera.ca): to account for kube-api fqdn, wildcard used for simplicity
 * trusted-repos: to be able to pull the images for our pods
 
 
