@@ -229,29 +229,27 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 rtt min/avg/max/mdev = 1.676/1.754/2.005/0.126 ms
 ```
 
-### e. Install the ipset tool in the bastion node (non k8s node):
+### e. Install the ipset tool and libpcap in the bastion node (non k8s node):
 
 ```bash
 sudo apt-get install -y ipset
+sudo apt install -y libpcap0.8
+sudo ln -s /lib/x86_64-linux-gnu/libpcap.so.0.8 /lib/x86_64-linux-gnu/libpcap.so.1
 ```
 
 The ipset must be installed to set up IP Sets in the linux kernel and it will be used by iptables to enforce rules with IP Sets.
  
-### f. Login into control1 (k8s master) and copy the cnx-node binary from the running container:
+### f. Grab the calico-node binary from one of the calico-node pods:
 
 ```bash
-ssh control1
-```
-```bash
-sudo docker cp $(sudo docker ps | grep -i calico-node_calico-node | awk '{print $1}'):/bin/calico-node cnx-node
+kubectl exec -it -n calico-system $(kubectl get po -n calico-system -owide | grep calico-node | grep ip-10-0-1-20.ca-central-1.compute.internal | awk '{print $1}') -- cat /bin/calico-node > cnx-node
 ```
 
-The cnx-node binary will be copied for the non-k8s node to run the felix on that to enforce the Security Policies/iptables rules as per the **[documentation](https://docs.tigera.io/reference/architecture/overview)**.
+The cnx-node binary will be used to run the felix on that to enforce the Security Policies/iptables rules as per the **[documentation](https://docs.tigera.io/reference/architecture/overview)**.
 
-### g. Exit from the control1 node and copy the cnx-node from control1 to bastion and change the user/group and permissions to the binary as below:
+### g. Change the user/group and permissions to the binary as below:
 
 ```bash
-scp control1:/home/ubuntu/cnx-node .
 sudo mv cnx-node /usr/local/bin/
 sudo chown root.root /usr/local/bin/cnx-node
 sudo chmod 755 /usr/local/bin/cnx-node
