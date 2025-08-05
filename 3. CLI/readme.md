@@ -202,7 +202,7 @@ kubectl delete pod multitool
 #### d. Open the browser with the URL shown through the command below:
 
 ```bash
-echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).lynx.tigera.ca
+echo https://hipstershop.$(kubectl cluster-info | grep -i control | awk -F "://" '{print $2}' | cut -d. -f1).training.tigera.ca
 ```
 
 #### e. Select any product(s), add to the Cart and click on “Place Order”.
