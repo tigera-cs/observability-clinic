@@ -236,7 +236,7 @@ sudo apt-get install -y ipset
 ```
 ```bash
 sudo apt install -y libpcap0.8
-sudo ln -s /lib/x86_64-linux-gnu/libpcap.so.0.8 /lib/x86_64-linux-gnu/libpcap.so.1
+sudo ln -sf /lib/x86_64-linux-gnu/libpcap.so.0.8 /lib/x86_64-linux-gnu/libpcap.so.1
 ```
 The ipset must be installed to set up IP Sets in the linux kernel and it will be used by iptables to enforce rules with IP Sets.
  
